@@ -21,12 +21,17 @@ const SignInComponent = () => {
       const response = await axios.post("https://secure-refuge-95775-26d553877570.herokuapp.com/api/auth/v1/signin", formData);
       if (response.data.token) {
         localStorage.setItem("authToken", response.data.token);
-        const uname = formData.username;
-        alert("Sign-in successful!");
+        const uname = formData.username.includes("@") ? formData.username.split("@")[0] : formData.username;
+        //alert("Sign-in successful!");
         navigate("/dashboard", { state:{uname}});
       }
     } catch (error) {
-      setError("Invalid credentials.");
+      if (error.response && error.response.status === 401) {
+        //alert("Invalid credentials");
+        setError("Invalid credentials. Please try again later.");
+    } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
     }
   };
 

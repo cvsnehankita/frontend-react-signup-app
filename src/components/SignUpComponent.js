@@ -34,12 +34,19 @@ const handleSubmit = async (e) => {
     }
   try {
     const response = await axios.post("https://secure-refuge-95775-26d553877570.herokuapp.com/api/auth/v1/signup", formData);
+    console.log(response);
     if (response.status === 200) {
-      alert("Sign-up successful!");
+      console.log("User registered successfully!");
+      //alert("Sign-up successful!");
       navigate("/signin");
     }
   } catch (error) {
-    alert("Error during sign-up.");
+    if (error.response && error.response.status === 401) {
+      alert("User already exists, please login.");
+      setError("User already exists, please login.");
+  } else {
+      setError("An unexpected error occurred. Please try again.");
+    }
   }
 };
 const handleGoogleLogin = (myresponse) =>{
